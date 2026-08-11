@@ -1,0 +1,473 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Barlow+Condensed:wght@400;600&display=swap');
+
+/* ==========================================================================
+   INK — design tokens lifted from streamlit-app/mri_classifier_app.py
+   (THEME_CSS :root, lines 394-406). Dark-only, matching the live demo.
+   ========================================================================== */
+
+:root {
+  --ink-bg: #2b2b2d;
+  --ink-sidebar: #333335;
+  --ink-panel: #373739;
+  --ink-ink: #f5f5f8;
+  --ink-acc: #94bce3;
+  --ink-acc-base: #5980a6;
+  --ink-hair: rgba(245, 245, 248, .16);
+  --ink-rule: rgba(245, 245, 248, .08);
+  --ink-track: rgba(245, 245, 248, .12);
+
+  /* text tiers — the app's muted ladder */
+  --ink-t75: rgba(245, 245, 248, .75);
+  --ink-t60: rgba(245, 245, 248, .6);
+  --ink-t55: rgba(245, 245, 248, .55);
+  --ink-t50: rgba(245, 245, 248, .5);
+  --ink-t45: rgba(245, 245, 248, .45);
+  --ink-t35: rgba(245, 245, 248, .35);
+
+  /* chart marks — validated with dataviz/scripts/validate_palette.js
+     ordinal pair (train/test) and 4-tier sequential ramp both pass all checks
+     against surface #373739 in dark mode. */
+  --mark: var(--ink-acc);
+  --mark-muted: rgba(148, 188, 227, .4);
+  --mark-train: #5980a6;
+  --mark-test: #94bce3;
+  --heat-1: #5f7183;
+  --heat-2: #6f8ba6;
+  --heat-3: #7fa3c6;
+  --heat-4: #94bce3;
+
+  --font-body: "Barlow", system-ui, -apple-system, sans-serif;
+  --font-head: "Barlow Condensed", system-ui, -apple-system, sans-serif;
+
+  /* the app's 3.4px spacing rhythm */
+  --s1: 3.4px;
+  --s2: 6.8px;
+  --s3: 10.2px;
+  --s4: 13.6px;
+  --s5: 17px;
+  --s6: 20.4px;
+  --s8: 27.2px;
+  --s10: 40px;
+  --s12: 48px;
+  --s16: 64px;
+
+  --sidebar-w: 300px;
+}
+
+/* — reset — */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, p, ul, ol, li, figure, dl, dd { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+/* height:auto is load-bearing — without it Chrome's presentational mapping of the
+   height="" attribute wins over aspect-ratio and the scan grid renders as tall slivers. */
+img { display: block; max-width: 100%; height: auto; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body {
+  background: var(--ink-bg);
+  color: var(--ink-ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-head);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -.015em;
+}
+
+a { color: var(--ink-acc); text-decoration: none; text-underline-offset: 3px; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--ink-acc); outline-offset: 2px; }
+::selection { background: rgba(148, 188, 227, .3); }
+
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  padding: var(--s3) var(--s5); background: var(--ink-panel); color: var(--ink-ink);
+  border: 1px solid var(--ink-hair); border-radius: 4px;
+}
+.skip-link:focus { left: var(--s3); top: var(--s3); }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ==========================================================================
+   Shared type — the app's label / kicker / heading treatments
+   ========================================================================== */
+
+.label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+  line-height: 1.2; color: var(--ink-t60);
+}
+.kicker {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+  line-height: 1.2; color: var(--ink-acc); margin-bottom: var(--s2);
+}
+.h2 { font-size: 32px; margin-bottom: var(--s2); }
+.h3 { font-size: 25px; margin-bottom: var(--s1); }
+.h4 { font-size: 18px; margin-bottom: var(--s1); }
+.lede { font-size: 15px; line-height: 1.55; color: var(--ink-t75); max-width: 68ch; }
+.narrow { max-width: 82ch; }
+.muted { color: var(--ink-t60); }
+.small { font-size: 13px; line-height: 1.5; color: var(--ink-t60); }
+.caption { font-size: 12px; line-height: 1.45; color: var(--ink-t50); }
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .92em; color: var(--ink-t75);
+}
+
+/* ==========================================================================
+   Shell — 300px sidebar + scrolling main, mirroring the demo
+   ========================================================================== */
+
+.shell { display: flex; align-items: flex-start; }
+
+.sidebar {
+  position: sticky; top: 0; flex: 0 0 var(--sidebar-w);
+  width: var(--sidebar-w); height: 100vh;
+  display: flex; flex-direction: column; gap: var(--s8);
+  padding: var(--s6) var(--s6) var(--s8);
+  background: var(--ink-sidebar);
+  border-right: 1px solid var(--ink-hair);
+  overflow-y: auto;
+}
+
+.brand-name { font-family: var(--font-head); font-weight: 600; font-size: 20px; line-height: 1.05; margin-bottom: var(--s1); }
+.brand-sub { font-size: 12.5px; line-height: 1.4; color: var(--ink-t55); }
+
+.nav { display: flex; flex-direction: column; gap: 2px; }
+.nav a {
+  display: flex; align-items: center; gap: var(--s3);
+  padding: 7px 10px; border-radius: 4px;
+  border: 1px solid transparent;
+  font-size: 13.5px; line-height: 1.3; color: var(--ink-ink);
+}
+.nav a:hover { background: rgba(245, 245, 248, .06); text-decoration: none; }
+.nav a .n {
+  flex: none; width: 20px;
+  font-family: var(--font-head); font-size: 12px; letter-spacing: .06em;
+  color: var(--ink-t45);
+}
+.nav a[aria-current="true"] {
+  background: rgba(116, 157, 196, .22);
+  border-color: rgba(148, 188, 227, .45);
+}
+.nav a[aria-current="true"] .n { color: var(--ink-acc); }
+
+.roster { display: flex; flex-direction: column; gap: 1px; }
+.roster li {
+  display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3);
+  font-size: 12.5px; padding: 2.5px 0;
+}
+.roster a { font-size: 11.5px; white-space: nowrap; }
+
+.sidebar-foot { margin-top: auto; display: flex; flex-direction: column; gap: var(--s3); }
+.disclaimer { font-size: 11.5px; line-height: 1.5; color: var(--ink-t50); }
+
+/* mobile nav toggle — hidden until the breakpoint */
+.navbar { display: none; }
+
+/* ==========================================================================
+   Main column
+   ========================================================================== */
+
+.main { flex: 1 1 auto; min-width: 0; padding: var(--s8) var(--s16) var(--s12); }
+.section { padding: var(--s12) 0; border-top: 1px solid var(--ink-rule); scroll-margin-top: var(--s6); }
+.section:first-of-type { border-top: 0; padding-top: var(--s6); }
+.section-head { margin-bottom: var(--s8); }
+.stack { display: flex; flex-direction: column; gap: var(--s6); }
+
+.prose p + p { margin-top: var(--s3); }
+.prose strong { font-weight: 700; color: var(--ink-ink); }
+
+/* — hero — */
+.hero { padding-bottom: var(--s10); }
+.hero h1 { font-size: clamp(38px, 5.2vw, 62px); margin-bottom: var(--s4); }
+.hero .lede { font-size: 17px; max-width: 60ch; margin-bottom: var(--s6); }
+
+.tags { display: flex; gap: var(--s2); flex-wrap: wrap; margin-bottom: var(--s6); }
+.tag {
+  display: inline-flex; align-items: center; font-size: 11px; letter-spacing: .02em;
+  padding: 4px 10px; border-radius: 3px;
+  background: rgba(245, 245, 248, .08); color: var(--ink-t75);
+}
+.tag-accent { background: rgba(148, 188, 227, .16); color: var(--ink-acc); }
+
+.actions { display: flex; gap: var(--s3); flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: var(--s2);
+  font-family: var(--font-head); font-weight: 600; font-size: 14px; line-height: 1.2;
+  padding: 11px 22px; border-radius: 4px; border: 1px solid transparent;
+}
+.btn:hover { text-decoration: none; }
+.btn-primary { background: var(--ink-acc-base); border-color: var(--ink-acc-base); color: #f2f2f3; }
+.btn-primary:hover { background: var(--ink-acc); border-color: var(--ink-acc); color: #26262a; }
+.btn-ghost { background: transparent; border-color: var(--ink-hair); color: var(--ink-ink); }
+.btn-ghost:hover { background: rgba(245, 245, 248, .07); }
+
+/* — panels & grids — */
+.panel {
+  padding: var(--s8); border-radius: 4px;
+  background: var(--ink-panel); border: 1px solid var(--ink-rule);
+}
+.panel-flush { padding: var(--s6); }
+.grid { display: grid; gap: var(--s6); }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.grid-split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s16); align-items: start; }
+
+/* — stat tiles: the app's 68px .ind-figure treatment — */
+.stat { display: flex; flex-direction: column; gap: var(--s1); }
+.stat .val {
+  font-family: var(--font-head); font-weight: 600; font-size: 54px;
+  line-height: .9; letter-spacing: -.01em; color: var(--ink-ink);
+}
+.stat .val span { font-size: 22px; }
+.stat .lab { font-size: 12.5px; line-height: 1.4; color: var(--ink-t55); }
+
+.hero-figure {
+  font-family: var(--font-head); font-weight: 600; font-size: 68px;
+  line-height: .9; letter-spacing: -.01em;
+}
+.hero-figure span { font-size: 26px; }
+
+/* — numbered step rows (preprocessing pipeline) — */
+.steps { display: flex; flex-direction: column; }
+.steps li {
+  display: flex; gap: var(--s3); align-items: baseline;
+  padding: var(--s2) 0; border-bottom: 1px solid var(--ink-rule); font-size: 13px;
+}
+.steps li:last-child { border-bottom: 0; }
+.steps .n { font-family: var(--font-head); font-size: 12px; letter-spacing: .06em; color: var(--ink-t45); flex: none; }
+
+/* — timeline — */
+.timeline { display: flex; flex-direction: column; }
+.timeline li {
+  position: relative; padding: 0 0 var(--s6) var(--s8);
+  border-left: 1px solid var(--ink-hair);
+}
+.timeline li:last-child { border-left-color: transparent; padding-bottom: 0; }
+.timeline li::before {
+  content: ""; position: absolute; left: -4.5px; top: 5px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ink-acc-base); border: 2px solid var(--ink-bg);
+}
+.timeline li.is-now::before { background: var(--ink-acc); }
+.timeline .when { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-t45); }
+.timeline .what { font-family: var(--font-head); font-weight: 600; font-size: 18px; margin: 2px 0 var(--s1); }
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+.table-wrap { overflow-x: auto; overscroll-behavior-x: contain; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+/* scroll rather than crushing columns on a phone */
+.table-wrap table { min-width: 480px; }
+caption {
+  text-align: left; font-size: 12px; color: var(--ink-t50);
+  padding-bottom: var(--s3);
+}
+th, td { text-align: left; padding: var(--s2) var(--s3); border-bottom: 1px solid var(--ink-rule); }
+th {
+  font-family: var(--font-body); font-weight: 500; font-size: 11px;
+  text-transform: uppercase; letter-spacing: .08em; color: var(--ink-t60);
+  white-space: nowrap;
+}
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover td { background: rgba(245, 245, 248, .04); }
+
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; vertical-align: middle; }
+.dot-on { background: var(--ink-acc); }
+.dot-off { border: 1px solid var(--ink-t45); }
+.idx { font-family: var(--font-head); font-size: 12px; letter-spacing: .06em; color: var(--ink-t45); }
+.legend-inline { display: flex; gap: var(--s4); align-items: center; font-size: 11.5px; color: var(--ink-t50); margin-top: var(--s3); }
+.legend-inline span { display: inline-flex; align-items: center; gap: var(--s1); }
+
+/* ==========================================================================
+   Charts — thin marks, hairline recessive axes, single-hue emphasis
+   ========================================================================== */
+
+.figure { display: flex; flex-direction: column; gap: var(--s4); }
+.figure-head { display: flex; flex-direction: column; gap: 2px; }
+.figure-title { font-family: var(--font-head); font-weight: 600; font-size: 18px; line-height: 1.2; }
+.figure-sub { font-size: 12.5px; color: var(--ink-t55); }
+.figure-note { font-size: 12px; line-height: 1.45; color: var(--ink-t50); }
+
+/* Charts are authored in a ~1000-unit viewBox, so their label sizes are only
+   correct near 1:1. Below this floor the SVG scrolls inside its own container
+   rather than scaling down until the axis text is unreadable. */
+.chart-scroll { overflow-x: auto; overscroll-behavior-x: contain; }
+.chart, .diagram { min-width: 860px; }
+
+.chart-legend { display: flex; gap: var(--s4); flex-wrap: wrap; font-size: 12px; color: var(--ink-t60); }
+.chart-legend span { display: inline-flex; align-items: center; gap: var(--s1); }
+.swatch { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+
+/* svg chart primitives */
+.axis-line { stroke: var(--ink-rule); stroke-width: 1; }
+.grid-line { stroke: var(--ink-rule); stroke-width: 1; }
+.tick-text { font-family: var(--font-body); font-size: 11px; fill: var(--ink-t45); }
+.cat-text { font-family: var(--font-body); font-size: 12.5px; fill: var(--ink-ink); }
+.cat-sub { font-family: var(--font-body); font-size: 10.5px; fill: var(--ink-t45); }
+.val-text {
+  font-family: var(--font-body); font-size: 12.5px; fill: var(--ink-t75);
+  font-variant-numeric: tabular-nums;
+}
+.val-text.is-top { fill: var(--ink-ink); font-weight: 700; }
+.bar { fill: var(--mark-muted); }
+.bar.is-top { fill: var(--mark); }
+.line-series { fill: none; stroke: var(--mark); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.line-marker { fill: var(--mark); stroke: var(--ink-panel); stroke-width: 2; }
+.annot { font-family: var(--font-body); font-size: 10.5px; fill: var(--ink-t50); }
+
+/* animated grow-in, same easing as the app's probability bars.
+   transform-box:fill-box makes transform-origin resolve against the mark's own
+   box rather than the SVG viewport, so bars grow from their baseline. */
+.bar-grow { transform-box: fill-box; transform-origin: left center; }
+
+/* The pre-animation state is applied only once JS confirms it will run the
+   reveal (body.js-anim), so a no-JS page renders every chart fully drawn. */
+.js-anim .chart .bar-grow { transform: scaleX(0); }
+.js-anim .chart .fade-in { opacity: 0; }
+
+.chart.chart-in .bar-grow { animation: grow .5s cubic-bezier(.22, .61, .36, 1) both; }
+.chart.chart-in .fade-in { animation: fade .5s .2s ease both; }
+@keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* — stacked split bars (dataset composition) — */
+.split-row { display: grid; grid-template-columns: 110px minmax(0, 1fr) 64px; gap: var(--s4); align-items: center; padding: var(--s1) 0; }
+.split-name { font-size: 13px; }
+.split-track { display: flex; height: 22px; border-radius: 3px; overflow: hidden; gap: 2px; }
+.split-seg { display: flex; align-items: center; justify-content: center; font-size: 11px; font-variant-numeric: tabular-nums; }
+.split-seg.train { background: var(--mark-train); color: #f2f2f3; }
+.split-seg.test { background: var(--mark-test); color: #26262a; }
+.split-total { text-align: right; font-size: 12.5px; font-variant-numeric: tabular-nums; color: var(--ink-t55); }
+
+/* — confusion matrix heatmap — */
+.cm { border-collapse: separate; border-spacing: 2px; font-size: 13px; width: auto; }
+.cm th { padding: var(--s1) var(--s2); border: 0; }
+.cm th.row-head { text-align: right; text-transform: none; letter-spacing: 0; font-size: 12.5px; color: var(--ink-ink); font-weight: 400; }
+.cm td {
+  width: 74px; height: 46px; padding: 0; border: 0; border-radius: 3px;
+  text-align: center; font-variant-numeric: tabular-nums;
+  background: rgba(245, 245, 248, .04); color: var(--ink-t45);
+}
+.cm td .pct { display: block; font-size: 10.5px; color: inherit; opacity: .8; }
+.cm td.t1 { background: var(--heat-1); color: var(--ink-ink); }
+.cm td.t2 { background: var(--heat-2); color: #26262a; }
+.cm td.t3 { background: var(--heat-3); color: #26262a; }
+.cm td.t4 { background: var(--heat-4); color: #26262a; }
+.cm tbody tr:hover td { background: unset; }
+.cm-scale { display: flex; align-items: center; gap: var(--s2); font-size: 11.5px; color: var(--ink-t50); }
+.cm-scale .ramp { display: flex; gap: 2px; }
+.cm-scale .ramp i { width: 18px; height: 8px; border-radius: 2px; display: block; }
+
+/* — sample scan grid — */
+.scans { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s3); }
+.scan figure { display: flex; flex-direction: column; gap: var(--s1); }
+.scan img {
+  width: 100%; aspect-ratio: 1 / 1; object-fit: cover;
+  border-radius: 4px; border: 1px solid var(--ink-rule); background: #000;
+}
+.scan figcaption { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-t50); }
+
+/* — pipeline diagram — */
+.io-row { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: var(--s4); padding: var(--s3) 0; border-bottom: 1px solid var(--ink-rule); }
+.io-row:last-child { border-bottom: 0; }
+.io-row dt { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-acc); padding-top: 3px; }
+.io-row dd { font-size: 13.5px; line-height: 1.5; color: var(--ink-t75); }
+
+/* — callout — */
+.callout {
+  padding: var(--s5) var(--s6); border-radius: 4px;
+  background: rgba(148, 188, 227, .1); border-left: 2px solid var(--ink-acc);
+  font-size: 13.5px; line-height: 1.55; color: var(--ink-t75);
+}
+.callout strong { color: var(--ink-ink); }
+
+/* — bullets — */
+.bullets li { position: relative; padding-left: var(--s4); font-size: 14px; line-height: 1.55; color: var(--ink-t75); }
+.bullets li + li { margin-top: var(--s2); }
+.bullets li::before { content: ""; position: absolute; left: 0; top: .62em; width: 4px; height: 4px; border-radius: 50%; background: var(--ink-acc); }
+.bullets strong { color: var(--ink-ink); font-weight: 700; }
+
+/* — citations — */
+.cites li { padding: var(--s3) 0; border-bottom: 1px solid var(--ink-rule); font-size: 13.5px; line-height: 1.55; color: var(--ink-t75); }
+.cites li:last-child { border-bottom: 0; }
+
+/* — next-steps placeholder — */
+.todo-card { border-style: dashed; border-color: var(--ink-hair); background: transparent; }
+.todo-card .label { margin-bottom: var(--s2); }
+
+/* — footer — */
+.footer {
+  margin-top: var(--s12); padding-top: var(--s6);
+  border-top: 1px solid var(--ink-rule);
+  display: flex; justify-content: space-between; gap: var(--s6); flex-wrap: wrap;
+  font-size: 12px; color: var(--ink-t50);
+}
+
+/* ==========================================================================
+   Responsive — the app's 1080px breakpoint
+   ========================================================================== */
+
+@media (max-width: 1080px) {
+  .shell { display: block; }
+
+  .sidebar {
+    position: static; width: auto; height: auto; flex: none;
+    border-right: 0; border-bottom: 1px solid var(--ink-hair);
+    padding: var(--s5) var(--s6);
+    gap: var(--s5);
+  }
+  .sidebar-foot { margin-top: 0; }
+  /* the collapsed bar carries its own brand, so the desktop block is redundant */
+  .sidebar .brand-block, .sidebar .roster-block, .sidebar .sidebar-foot { display: none; }
+
+  .navbar {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
+  }
+  .nav-toggle {
+    display: inline-flex; align-items: center; gap: var(--s2);
+    font-family: var(--font-head); font-weight: 600; font-size: 13px;
+    padding: 7px 14px; border-radius: 4px; cursor: pointer;
+    background: transparent; color: var(--ink-ink); border: 1px solid var(--ink-hair);
+  }
+  .nav { display: none; }
+  .nav.is-open { display: flex; }
+
+  .main { padding: var(--s8) var(--s8) var(--s12); }
+  .grid-split { grid-template-columns: minmax(0, 1fr); gap: var(--s8); }
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .main { padding: var(--s6) var(--s5) var(--s10); }
+  .section { padding: var(--s10) 0; }
+  .h2 { font-size: 27px; }
+  .h3 { font-size: 22px; }
+  .grid-2, .grid-3 { grid-template-columns: minmax(0, 1fr); }
+  .scans { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat .val { font-size: 42px; }
+  .panel { padding: var(--s5); }
+  .split-row { grid-template-columns: 84px minmax(0, 1fr) 52px; gap: var(--s3); }
+}
+
+@media print {
+  .sidebar, .navbar { display: none; }
+  body { background: #fff; color: #000; }
+}

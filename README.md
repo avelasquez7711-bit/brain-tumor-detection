@@ -4,7 +4,9 @@ This project focuses on automatically identifying and classifying brain tumors f
 
 🌐 **Live Application:** [brain-mri-tumor-classifier-ai4all.streamlit.app](https://brain-mri-tumor-classifier-ai4all.streamlit.app/)
 
-## Collabortors
+📄 **Project Site:** [sahilmulki.github.io/brain-tumor-detection](https://sahilmulki.github.io/brain-tumor-detection/) — overview, evaluation, and bias analysis
+
+## Collaborators
 * [Angel Velasquez](https://github.com/avelasquez7711-bit)
 * [Sahil Mulki](https://github.com/SahilMulki)
 * [Yi Zou](https://github.com/yizou275)
@@ -55,6 +57,16 @@ Before feeding the data into our network, the workflow includes:
 * **Data Augmentation:** Applying random rotations and brightness adjustments during training to force the model to learn structural anomalies rather than image-specific artifacts or scan angles.
 
 ## Citations
-* Khan, H., & Al-Bayati, A. S. (2025). Advanced brain tumor classification in MR images using transfer learning and pre-trained deep CNN models. Bioengineering, 12(1), 45. https://doi.org/10.3390/bioengineering12010045
-* Abbad Andaloussi, M., Maser, R., Hertel, F., Lamoline, F., & Husch, A. D. (2025). Exploring adult glioma through MRI. Neuro-Oncology Advances, 7(1), vdae197. https://doi.org/10.1093/noajnl/vdae197
-* Rehman, A., Naz, S., Razzak, I., & Khan, M. U. G. (2023). Brain tumor detection based on deep learning approaches and magnetic resonance imaging. Cancers, 15(16), 4172. https://doi.org/10.3390/cancers15164172 
+Author and DOI details below were verified against Crossref metadata.
+
+* Disci, R., Gurcan, F., & Soylu, A. (2025). Advanced brain tumor classification in MR images using transfer learning and pre-trained deep CNN models. Cancers, 17(1), 121. https://doi.org/10.3390/cancers17010121
+* Abbad Andaloussi, M., Maser, R., Hertel, F., Lamoline, F., & Husch, A. D. (2025). Exploring adult glioma through MRI: A review of publicly available datasets to guide efficient image analysis. Neuro-Oncology Advances, 7(1), vdae197. https://doi.org/10.1093/noajnl/vdae197
+* Abdusalomov, A. B., Mukhiddinov, M., & Whangbo, T. K. (2023). Brain tumor detection based on deep learning approaches and magnetic resonance imaging. Cancers, 15(16), 4172. https://doi.org/10.3390/cancers15164172
+
+## Project Site
+The static site in [`docs/`](docs/) is published with GitHub Pages (Settings → Pages → source `main` / `/docs`).
+To preview it locally:
+
+```bash
+python3 -m http.server 8000 --directory docs
+```

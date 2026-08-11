@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brain Tumor MRI Imaging Detection — AI4ALL Apply AI Project</title>
+<meta name="description" content="Detecting and classifying brain tumors from MRI scans with convolutional neural networks. Project overview, model evaluation, bias analysis, and a live demo.">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="Brain Tumor MRI Imaging Detection">
+<meta property="og:description" content="Five CNN architectures trained on 7,200 MRI scans to classify glioma, meningioma, pituitary tumor, and no tumor.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="shell">
+
+  <!-- ==================== SIDEBAR ==================== -->
+  <aside class="sidebar">
+    <div class="navbar">
+      <div>
+        <div class="brand-name">Brain MRI Tumor Detection</div>
+        <div class="brand-sub">AI4ALL · Apply AI</div>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+    </div>
+
+    <div class="brand-block">
+      <div class="brand-name">Brain MRI Tumor Detection</div>
+      <div class="brand-sub">Multi-architecture CNN registry · academic project site</div>
+    </div>
+
+    <nav class="nav" id="nav" aria-label="Sections">
+      <a href="#overview"><span class="n">01</span> Overview</a>
+      <a href="#evolution"><span class="n">02</span> Evolution</a>
+      <a href="#dataset"><span class="n">03</span> Dataset</a>
+      <a href="#algorithm"><span class="n">04</span> Algorithm</a>
+      <a href="#registry"><span class="n">05</span> Model registry</a>
+      <a href="#evaluation"><span class="n">06</span> Evaluation</a>
+      <a href="#impact"><span class="n">07</span> Impact &amp; bias</a>
+      <a href="#next"><span class="n">08</span> Next steps</a>
+      <a href="#citations"><span class="n">09</span> Citations</a>
+    </nav>
+
+    <div class="roster-block">
+      <p class="label" style="margin-bottom:var(--s2)">Project team</p>
+      <ul class="roster">
+        <li><span>Angel Velasquez</span> <a href="https://github.com/avelasquez7711-bit">GitHub</a></li>
+        <li><span>Sahil Mulki</span> <a href="https://github.com/SahilMulki">GitHub</a></li>
+        <li><span>Yi Zou</span> <a href="https://github.com/yizou275">GitHub</a></li>
+        <li><span>Hamet Coulibaly</span> <a href="https://github.com/hamet-c">GitHub</a></li>
+        <li><span>Michael Abraham</span> <a href="https://github.com/mikeiioo">GitHub</a></li>
+        <li><span>Izzie Lee</span> <a href="https://github.com/jiwonizzielee">GitHub</a></li>
+        <li><span>Ying Lin Zhao</span> <a href="https://github.com/Yzhao2433">GitHub</a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-foot">
+      <p class="disclaimer">Academic demonstration only — not intended for medical diagnosis.</p>
+    </div>
+  </aside>
+
+  <!-- ==================== MAIN ==================== -->
+  <main class="main" id="main">
+
+    <!-- ---------- HERO ---------- -->
+    <header class="section hero">
+      <p class="kicker">AI4ALL · Apply AI Project</p>
+      <h1>Brain Tumor MRI<br>Imaging Detection</h1>
+      <p class="lede">
+        Six students, five convolutional neural networks, and 7,200 brain MRI scans.
+        We trained every model from scratch to answer one question: can a CNN detect a brain
+        tumor in an MRI slice and sort it into the right category — glioma, meningioma,
+        pituitary, or none at all?
+      </p>
+      <div class="tags">
+        <span class="tag tag-accent">7,200 scans</span>
+        <span class="tag">4 diagnostic classes</span>
+        <span class="tag">5 deployed CNNs</span>
+        <span class="tag">PyTorch + TensorFlow</span>
+        <span class="tag">91.94% best held-out accuracy</span>
+      </div>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://brain-mri-tumor-classifier-ai4all.streamlit.app/">Open the live demo →</a>
+        <a class="btn btn-ghost" href="https://github.com/SahilMulki/brain-tumor-detection">View the repository</a>
+      </div>
+    </header>
+
+    <!-- ---------- 01 OVERVIEW ---------- -->
+    <section class="section" id="overview">
+      <div class="section-head">
+        <p class="kicker">01 — Overview</p>
+        <h2 class="h2">What we built, and why it matters</h2>
+      </div>
+
+      <div class="grid grid-split">
+        <div class="prose stack">
+          <div>
+            <h3 class="h4">The problem</h3>
+            <p class="lede">
+              Brain tumors are life-threatening, and the skull's rigid structure means any abnormal
+              growth raises intracranial pressure fast. Detection speed changes outcomes. But reading
+              MRI volumes is slow, expert-scarce work, and the three tumor types we target look
+              genuinely similar on a single slice — even to trained readers.
+            </p>
+          </div>
+          <div>
+            <h3 class="h4">The research question</h3>
+            <p class="lede">
+              <strong>Can machine learning models accurately detect brain tumors from MRI images and
+              classify them into the correct categories?</strong> We treated this as a four-way
+              supervised image-classification problem and measured it against a held-out test split
+              plus two independent external datasets.
+            </p>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="panel">
+            <p class="label" style="margin-bottom:var(--s4)">Where the project landed</p>
+            <div class="grid grid-2" style="gap:var(--s6)">
+              <div class="stat">
+                <div class="val">91.9<span>%</span></div>
+                <div class="lab">Best held-out accuracy<br>Angel · <span class="mono">brain_mri_cnn_v5</span></div>
+              </div>
+              <div class="stat">
+                <div class="val">0.918</div>
+                <div class="lab">Macro F1 on the same run<br>balanced across 4 classes</div>
+              </div>
+              <div class="stat">
+                <div class="val">5</div>
+                <div class="lab">Independent architectures<br>live in the demo</div>
+              </div>
+              <div class="stat">
+                <div class="val">3</div>
+                <div class="lab">Datasets used<br>1 primary + 2 external</div>
+              </div>
+            </div>
+          </div>
+          <p class="caption">
+            Figures read from the committed notebook outputs in
+            <span class="mono">cnn-models/</span> and <span class="mono">unseen-dataset-evaluation/</span>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 02 EVOLUTION ---------- -->
+    <section class="section" id="evolution">
+      <div class="section-head">
+        <p class="kicker">02 — Evolution</p>
+        <h2 class="h2">How the project changed shape</h2>
+        <p class="lede">
+          We did not build one model. Each member took the same dataset and the same four labels and
+          built their own network, which turned the project into a controlled comparison: same data,
+          same task, six different sets of choices. The clearest single lineage is Angel's, which ran
+          five versions and logged held-out accuracy at every step.
+        </p>
+      </div>
+
+      <div class="stack">
+        <figure class="figure panel">
+          <figcaption class="figure-head">
+            <span class="figure-title">One architecture, five revisions</span>
+            <span class="figure-sub">Held-out test accuracy · Angel's PyTorch CNN · 1,600 scans</span>
+          </figcaption>
+          <div class="chart-scroll">
+            <svg class="chart" viewBox="0 0 1000 280" role="img" width="100%"
+                 aria-label="Line chart: held-out accuracy rises from 84.63% at version 1 to 91.94% at version 5, with a flat step between v1 and v2.">
+              <line class="grid-line" x1="130" y1="210" x2="950" y2="210"></line>
+              <line class="grid-line" x1="130" y1="153.3" x2="950" y2="153.3"></line>
+              <line class="grid-line" x1="130" y1="96.7" x2="950" y2="96.7"></line>
+              <line class="grid-line" x1="130" y1="40" x2="950" y2="40"></line>
+              <text class="tick-text" x="112" y="214" text-anchor="end">80%</text>
+              <text class="tick-text" x="112" y="157.3" text-anchor="end">85%</text>
+              <text class="tick-text" x="112" y="100.7" text-anchor="end">90%</text>
+              <text class="tick-text" x="112" y="44" text-anchor="end">95%</text>
+
+              <g class="fade-in">
+                <polyline class="line-series"
+                  points="130,157.6 335,158.3 540,126.4 745,83.9 950,74.7"></polyline>
+                <circle class="line-marker" cx="130" cy="157.6" r="5"></circle>
+                <circle class="line-marker" cx="335" cy="158.3" r="5"></circle>
+                <circle class="line-marker" cx="540" cy="126.4" r="5"></circle>
+                <circle class="line-marker" cx="745" cy="83.9"  r="5"></circle>
+                <circle class="line-marker" cx="950" cy="74.7"  r="5"></circle>
+                <text class="val-text" x="130" y="146" text-anchor="middle">84.63%</text>
+                <text class="val-text is-top" x="950" y="63" text-anchor="end">91.94%</text>
+              </g>
+
+              <text class="cat-text" x="130" y="234" text-anchor="middle">v1</text>
+              <text class="cat-text" x="335" y="234" text-anchor="middle">v2</text>
+              <text class="cat-text" x="540" y="234" text-anchor="middle">v3</text>
+              <text class="cat-text" x="745" y="234" text-anchor="middle">v4</text>
+              <text class="cat-text" x="950" y="234" text-anchor="middle">v5</text>
+              <text class="cat-sub" x="130" y="250" text-anchor="middle">5 epochs</text>
+              <text class="cat-sub" x="335" y="250" text-anchor="middle">15 epochs</text>
+              <text class="cat-sub" x="540" y="250" text-anchor="middle">30 epochs</text>
+              <text class="cat-sub" x="745" y="250" text-anchor="middle">40 epochs</text>
+              <text class="cat-sub" x="950" y="250" text-anchor="middle">25 epochs</text>
+            </svg>
+          </div>
+          <p class="figure-note">
+            Note the flat step from v1 to v2: adding BatchNorm and dropout cost 0.06 points on its
+            own. The gains came later, from depth (v4) and from switching to a single grayscale
+            channel with contrast jitter (v5).
+          </p>
+          <div class="table-wrap">
+            <table>
+              <caption>Version changelog — source: <span class="mono">cnn-models/brain_mri_cnn_v1–v5.ipynb</span></caption>
+              <thead>
+                <tr><th>Version</th><th>What changed</th><th class="num">Test acc.</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>v1</td><td>3 conv blocks, RGB, Adam 1e-3</td><td class="num">84.63%</td></tr>
+                <tr><td>v2</td><td>+ BatchNorm, dropout, h-flip, rotation 15°</td><td class="num">84.56%</td></tr>
+                <tr><td>v3</td><td>+ v-flip, rotation 20°, <span class="mono">ReduceLROnPlateau</span></td><td class="num">87.38%</td></tr>
+                <tr><td>v4</td><td>+ 4th conv block (128 ch), 40 epochs</td><td class="num">91.13%</td></tr>
+                <tr><td>v5</td><td>Grayscale ×1, ColorJitter, weight decay 1e-5</td><td class="num">91.94%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </figure>
+
+        <ol class="timeline narrow">
+          <li>
+            <p class="when">Phase 1 — Proposal</p>
+            <p class="what">Scope and dataset</p>
+            <p class="small">Chose the four-class Kaggle MRI dataset, set the preprocessing plan
+              (resize, margin removal, normalization), and named CNN as the primary algorithm with
+              Mask R-CNN as a planned segmentation extension.</p>
+          </li>
+          <li>
+            <p class="when">Phase 2 — Baseline</p>
+            <p class="what">First Keras CNN</p>
+            <p class="small">A plain Conv/MaxPool stack with no regularization hit
+              <strong>87.4%</strong> on the test split while reaching 100% training accuracy — a
+              textbook overfit that set the agenda for everything after.</p>
+          </li>
+          <li>
+            <p class="when">Phase 3 — Divergence</p>
+            <p class="what">Five architectures in parallel</p>
+            <p class="small">PyTorch and TensorFlow lines developed side by side: grayscale vs RGB
+              inputs, 3 to 5 convolutional blocks, global average pooling vs flatten, and an OpenCV
+              contour crop that isolates the brain before resizing.</p>
+          </li>
+          <li>
+            <p class="when">Phase 4 — Regularization</p>
+            <p class="what">Dropout, BatchNorm, augmentation</p>
+            <p class="small">Rotation, flips and contrast jitter, plus <span class="mono">ReduceLROnPlateau</span>
+              scheduling, early stopping and class-weighted loss. This is where the accuracy actually
+              moved — Angel's v3→v5 gained 4.6 points.</p>
+          </li>
+          <li>
+            <p class="when">Phase 5 — External validation</p>
+            <p class="what">Testing on data we never trained on</p>
+            <p class="small">Two independent public datasets (1,000 and 512 scans) were run against
+              the finished checkpoints. This is where generalization gaps appeared that the
+              in-distribution test split had completely hidden.</p>
+          </li>
+          <li class="is-now">
+            <p class="when">Phase 6 — Deployment</p>
+            <p class="what">A multi-model Streamlit registry</p>
+            <p class="small">All five trained checkpoints were put behind one interface that
+              preprocesses an uploaded scan per that model's own pipeline and returns the full
+              four-class probability distribution.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ---------- 03 DATASET ---------- -->
+    <section class="section" id="dataset">
+      <div class="section-head">
+        <p class="kicker">03 — Dataset</p>
+        <h2 class="h2">7,200 scans, four labels, one balanced split</h2>
+        <p class="lede">
+          Our primary source is the
+          <a href="https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset/data">Brain Tumor MRI Dataset</a>
+          on Kaggle (CC BY 4.0), which ships pre-sorted into training and testing cohorts with an
+          exactly equal class distribution — 1,400 training and 400 testing scans for each of the
+          four categories.
+        </p>
+      </div>
+
+      <div class="stack">
+        <div class="grid grid-split">
+          <figure class="figure panel">
+            <figcaption class="figure-head">
+              <span class="figure-title">Class balance and split</span>
+              <span class="figure-sub">Images per diagnostic class · 7,200 total</span>
+            </figcaption>
+            <div class="chart-legend" style="margin-bottom:var(--s2)">
+              <span><i class="swatch" style="background:var(--mark-train)"></i> Training</span>
+              <span><i class="swatch" style="background:var(--mark-test)"></i> Testing</span>
+            </div>
+            <div>
+              <div class="split-row">
+                <span class="split-name">Glioma</span>
+                <span class="split-track"><span class="split-seg train" style="flex:1400">1,400</span><span class="split-seg test" style="flex:400">400</span></span>
+                <span class="split-total">1,800</span>
+              </div>
+              <div class="split-row">
+                <span class="split-name">Meningioma</span>
+                <span class="split-track"><span class="split-seg train" style="flex:1400">1,400</span><span class="split-seg test" style="flex:400">400</span></span>
+                <span class="split-total">1,800</span>
+              </div>
+              <div class="split-row">
+                <span class="split-name">Pituitary</span>
+                <span class="split-track"><span class="split-seg train" style="flex:1400">1,400</span><span class="split-seg test" style="flex:400">400</span></span>
+                <span class="split-total">1,800</span>
+              </div>
+              <div class="split-row">
+                <span class="split-name">No tumor</span>
+                <span class="split-track"><span class="split-seg train" style="flex:1400">1,400</span><span class="split-seg test" style="flex:400">400</span></span>
+                <span class="split-total">1,800</span>
+              </div>
+            </div>
+            <p class="figure-note">
+              Perfect balance means accuracy is a meaningful headline number here — no class can be
+              inflated by prevalence, and a naive majority-class guesser would score 25%.
+            </p>
+          </figure>
+
+          <div class="stack">
+            <div>
+              <p class="label" style="margin-bottom:var(--s3)">Sample scans from the test split</p>
+              <div class="scans">
+                <div class="scan"><figure><img src="assets/samples/glioma-1.jpg" alt="Axial MRI slice showing a glioma" loading="lazy" width="512" height="512"><figcaption>Glioma</figcaption></figure></div>
+                <div class="scan"><figure><img src="assets/samples/meningioma-1.jpg" alt="Coronal MRI slice showing a meningioma" loading="lazy" width="512" height="512"><figcaption>Meningioma</figcaption></figure></div>
+                <div class="scan"><figure><img src="assets/samples/notumor-1.jpg" alt="Axial MRI slice with no tumor present" loading="lazy" width="630" height="630"><figcaption>No tumor</figcaption></figure></div>
+                <div class="scan"><figure><img src="assets/samples/pituitary-1.jpg" alt="Coronal MRI slice showing a pituitary tumor" loading="lazy" width="512" height="512"><figcaption>Pituitary</figcaption></figure></div>
+                <div class="scan"><figure><img src="assets/samples/glioma-2.jpg" alt="Second MRI slice showing a glioma" loading="lazy" width="512" height="512"><figcaption>Glioma</figcaption></figure></div>
+                <div class="scan"><figure><img src="assets/samples/meningioma-2.jpg" alt="Second MRI slice showing a meningioma" loading="lazy" width="512" height="512"><figcaption>Meningioma</figcaption></figure></div>
+                <div class="scan"><figure><img src="assets/samples/notumor-2.jpg" alt="Second MRI slice with no tumor present" loading="lazy" width="630" height="630"><figcaption>No tumor</figcaption></figure></div>
+                <div class="scan"><figure><img src="assets/samples/pituitary-2.jpg" alt="Second MRI slice showing a pituitary tumor" loading="lazy" width="512" height="512"><figcaption>Pituitary</figcaption></figure></div>
+              </div>
+            </div>
+            <div class="panel panel-flush">
+              <p class="label" style="margin-bottom:var(--s2)">Preprocessing pipeline</p>
+              <ol class="steps">
+                <li><span class="n">01</span><span>Decode to grayscale (×1) or RGB (×3), depending on the model</span></li>
+                <li><span class="n">02</span><span>Optional OpenCV largest-contour crop to isolate the brain from black margin</span></li>
+                <li><span class="n">03</span><span>Resize to a uniform 256 × 256</span></li>
+                <li><span class="n">04</span><span>Augment during training only — rotation, flips, contrast jitter</span></li>
+                <li><span class="n">05</span><span>Normalize to μ = 0.5, σ = 0.5 (PyTorch) or rescale to 0–1 (Keras)</span></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 04 ALGORITHM ---------- -->
+    <section class="section" id="algorithm">
+      <div class="section-head">
+        <p class="kicker">04 — Algorithm</p>
+        <h2 class="h2">Convolutional neural networks, trained from scratch</h2>
+        <p class="lede">
+          Every model in this project is a custom CNN built and trained from random initialization —
+          there is no transfer learning and no pretrained backbone anywhere in the repository. That
+          was a deliberate teaching choice: it meant each member had to reason about depth, capacity
+          and regularization themselves rather than inherit them.
+        </p>
+      </div>
+
+      <div class="stack">
+        <figure class="figure panel">
+          <figcaption class="figure-head">
+            <span class="figure-title">Signal path</span>
+            <span class="figure-sub">From an uploaded scan to four class probabilities</span>
+          </figcaption>
+          <div class="chart-scroll">
+            <svg class="diagram" viewBox="0 0 1000 250" role="img" width="100%"
+                 aria-label="Diagram: a 256 by 256 MRI slice passes through four convolutional blocks that halve the spatial size while widening channels, then a pooled dense head produces four class probabilities via softmax.">
+              <defs>
+                <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M0,1 L9,5 L0,9" fill="none" stroke="rgba(245,245,248,.45)" stroke-width="1.5"></path>
+                </marker>
+              </defs>
+
+              <!-- input -->
+              <rect x="16" y="72" width="96" height="96" rx="3" fill="rgba(148,188,227,.16)" stroke="var(--ink-acc)" stroke-width="1"></rect>
+              <text class="cat-text" x="64" y="114" text-anchor="middle">MRI</text>
+              <text class="cat-text" x="64" y="132" text-anchor="middle">slice</text>
+              <text class="cat-sub" x="64" y="192" text-anchor="middle">256×256×1</text>
+
+              <line x1="122" y1="120" x2="164" y2="120" stroke="rgba(245,245,248,.45)" stroke-width="1.5" marker-end="url(#arw)"></line>
+
+              <!-- conv blocks: shrinking spatially, widening in channels -->
+              <text class="annot" x="330" y="46" text-anchor="middle">Conv 3×3 → BatchNorm → ReLU → MaxPool 2×2, repeated</text>
+              <line class="grid-line" x1="176" y1="58" x2="484" y2="58"></line>
+
+              <rect x="176" y="82" width="52" height="76" rx="2" fill="rgba(148,188,227,.4)"></rect>
+              <text class="cat-sub" x="202" y="180" text-anchor="middle">128²</text>
+              <text class="cat-sub" x="202" y="194" text-anchor="middle">32 ch</text>
+
+              <rect x="252" y="92" width="52" height="56" rx="2" fill="rgba(148,188,227,.5)"></rect>
+              <text class="cat-sub" x="278" y="180" text-anchor="middle">64²</text>
+              <text class="cat-sub" x="278" y="194" text-anchor="middle">64 ch</text>
+
+              <rect x="328" y="102" width="52" height="36" rx="2" fill="rgba(148,188,227,.62)"></rect>
+              <text class="cat-sub" x="354" y="180" text-anchor="middle">32²</text>
+              <text class="cat-sub" x="354" y="194" text-anchor="middle">128 ch</text>
+
+              <rect x="404" y="110" width="52" height="20" rx="2" fill="rgba(148,188,227,.78)"></rect>
+              <text class="cat-sub" x="430" y="180" text-anchor="middle">16²</text>
+              <text class="cat-sub" x="430" y="194" text-anchor="middle">256 ch</text>
+
+              <line x1="466" y1="120" x2="508" y2="120" stroke="rgba(245,245,248,.45)" stroke-width="1.5" marker-end="url(#arw)"></line>
+
+              <!-- dense head -->
+              <rect x="520" y="86" width="96" height="68" rx="3" fill="none" stroke="var(--ink-hair)" stroke-width="1"></rect>
+              <text class="cat-text" x="568" y="114" text-anchor="middle">pool +</text>
+              <text class="cat-text" x="568" y="132" text-anchor="middle">dropout</text>
+              <text class="cat-sub" x="568" y="180" text-anchor="middle">dense head</text>
+
+              <line x1="626" y1="120" x2="668" y2="120" stroke="rgba(245,245,248,.45)" stroke-width="1.5" marker-end="url(#arw)"></line>
+
+              <!-- softmax output -->
+              <text class="annot" x="684" y="46">softmax → 4 probabilities summing to 1</text>
+              <line class="grid-line" x1="684" y1="58" x2="984" y2="58"></line>
+
+              <rect x="684" y="74" width="150" height="20" rx="2" fill="var(--ink-acc)"></rect>
+              <!-- inline style, not a fill attribute: the class's CSS fill would win -->
+              <text class="cat-sub" x="692" y="88" style="fill:#26262a">Glioma</text>
+              <rect x="684" y="102" width="62" height="20" rx="2" fill="rgba(148,188,227,.4)"></rect>
+              <text class="cat-sub" x="756" y="116">Meningioma</text>
+              <rect x="684" y="130" width="30" height="20" rx="2" fill="rgba(148,188,227,.4)"></rect>
+              <text class="cat-sub" x="724" y="144">No tumor</text>
+              <rect x="684" y="158" width="18" height="20" rx="2" fill="rgba(148,188,227,.4)"></rect>
+              <text class="cat-sub" x="712" y="172">Pituitary</text>
+              <text class="cat-sub" x="684" y="200">illustrative output — argmax is the prediction</text>
+            </svg>
+          </div>
+          <p class="figure-note">
+            Spatial resolution halves at every pooling step while channel depth grows — the network
+            trades <em>where</em> for <em>what</em>. That is precisely why it can name a tumor type but
+            cannot yet point to where in the slice it found one.
+          </p>
+        </figure>
+
+        <div class="grid grid-split">
+          <div class="panel">
+            <p class="label" style="margin-bottom:var(--s4)">Specification</p>
+            <dl>
+              <div class="io-row">
+                <dt>Type</dt>
+                <dd>Supervised multi-class image classifier. A convolutional neural network learns
+                  spatial filters directly from pixels, so no hand-engineered radiological features
+                  are supplied.</dd>
+              </div>
+              <div class="io-row">
+                <dt>Input</dt>
+                <dd>A single 2D MRI slice as a <strong>256 × 256</strong> tensor — 1 channel
+                  (grayscale) or 3 channels (RGB) depending on the model — normalized to
+                  μ = 0.5, σ = 0.5 or scaled to 0–1.</dd>
+              </div>
+              <div class="io-row">
+                <dt>Body</dt>
+                <dd>4–5 repetitions of <span class="mono">Conv 3×3 → BatchNorm → ReLU → MaxPool 2×2</span>,
+                  widening 16 → 256 channels, then dropout and either global average pooling or a
+                  flatten into a dense head.</dd>
+              </div>
+              <div class="io-row">
+                <dt>Output</dt>
+                <dd>Four logits → <strong>softmax</strong> → a probability distribution over
+                  <span class="mono">[Glioma, Meningioma, No Tumor, Pituitary]</span> summing to 1.
+                  The argmax is the prediction; the full vector is what the demo displays.</dd>
+              </div>
+              <div class="io-row">
+                <dt>Loss</dt>
+                <dd>Cross-entropy, class-weighted in two of the five models to penalize the
+                  clinically expensive misses more heavily. Adam optimizer with
+                  <span class="mono">ReduceLROnPlateau</span> scheduling and early stopping.</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="stack">
+            <div class="callout">
+              <strong>Planned second algorithm.</strong> Our proposal named Mask R-CNN as an extension
+              for pixel-level tumor segmentation. It is not implemented in the current repository — the
+              models classify a whole slice and produce no bounding box or mask. Closing that gap is the
+              single biggest open item, both for accuracy and for clinical trust.
+            </div>
+            <div class="panel">
+              <p class="label" style="margin-bottom:var(--s3)">Why five models instead of one</p>
+              <ul class="bullets">
+                <li><strong>It is a built-in ablation.</strong> Same data, same labels, different
+                  depth, colour space and regularization — the spread between them is informative in
+                  a way a single number is not.</li>
+                <li><strong>It exposes what is data, not design.</strong> When every architecture
+                  fails on the same class, the cause is upstream of the model.</li>
+                <li><strong>Two frameworks.</strong> PyTorch and TensorFlow/Keras pipelines sit behind
+                  one interface, which forced a clean separation between preprocessing and inference.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 05 REGISTRY ---------- -->
+    <section class="section" id="registry">
+      <div class="section-head">
+        <p class="kicker">05 — Model registry</p>
+        <h2 class="h2">Five architectures behind one interface</h2>
+        <p class="lede">
+          The <a href="https://brain-mri-tumor-classifier-ai4all.streamlit.app/">live demo</a> loads
+          each member's checkpoint on demand and applies that model's own preprocessing pipeline to
+          your uploaded scan. The table below mirrors the registry exactly as the app presents it.
+        </p>
+      </div>
+
+      <div class="panel">
+        <div class="table-wrap">
+          <table>
+            <caption>Deployment registry — mirrors <span class="mono">MODEL_CONFIG</span> in <span class="mono">streamlit-app/mri_classifier_app.py</span></caption>
+            <thead>
+              <tr>
+                <th>#</th><th>Model</th><th>Weights</th><th>Framework</th>
+                <th>Preprocessing</th><th class="num">Accuracy</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="idx">01</span></td><td>Angel</td>
+                <td><span class="mono">brain_mri_cnn.pth</span></td><td>PyTorch</td>
+                <td class="small">Resize 256², grayscale ×1, normalize</td>
+                <td class="num">~93%</td><td><span class="dot dot-on"></span> Deployed</td>
+              </tr>
+              <tr>
+                <td><span class="idx">02</span></td><td>Sahil</td>
+                <td><span class="mono">best_cnn.pt</span></td><td>PyTorch</td>
+                <td class="small">Contour crop, grayscale ×1, resize 256², normalize</td>
+                <td class="num">~85%</td><td><span class="dot dot-on"></span> Deployed</td>
+              </tr>
+              <tr>
+                <td><span class="idx">03</span></td><td>Yi</td>
+                <td><span class="mono">yi_cnn_ver3_result.pth</span></td><td>PyTorch</td>
+                <td class="small">RGB ×3, resize 256², normalize</td>
+                <td class="num">~90%</td><td><span class="dot dot-on"></span> Deployed</td>
+              </tr>
+              <tr>
+                <td><span class="idx">04</span></td><td>Hamet</td>
+                <td><span class="mono">CNNTest_v2.0.keras</span></td><td>TensorFlow</td>
+                <td class="small">RGB ×3, resize 256² bilinear, scale 0–1</td>
+                <td class="num">~90%</td><td><span class="dot dot-on"></span> Deployed</td>
+              </tr>
+              <tr>
+                <td><span class="idx">05</span></td><td>Izzie</td>
+                <td><span class="mono">izzie_cnn_weights.pth</span></td><td>PyTorch</td>
+                <td class="small">RGB ×3, resize 256², normalize</td>
+                <td class="num">~90%</td><td><span class="dot dot-on"></span> Deployed</td>
+              </tr>
+              <tr>
+                <td><span class="idx">06</span></td><td>Mike</td>
+                <td class="muted">—</td><td class="muted">—</td>
+                <td class="small muted">Awaiting configuration</td>
+                <td class="num muted">—</td><td><span class="dot dot-off"></span> Awaiting weights</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="legend-inline">
+          <span><i class="dot dot-on"></i> Weights loaded in the demo</span>
+          <span><i class="dot dot-off"></i> Slot reserved, not yet trained</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 06 EVALUATION ---------- -->
+    <section class="section" id="evaluation">
+      <div class="section-head">
+        <p class="kicker">06 — Evaluation</p>
+        <h2 class="h2">What the models actually get right</h2>
+        <p class="lede">
+          Every figure in this section is read from committed notebook output. The primary benchmark
+          is the untouched 1,600-scan Kaggle test split (400 per class); the generalization check uses
+          two external datasets the models never saw during training.
+        </p>
+      </div>
+
+      <div class="stack">
+
+        <!-- Chart A -->
+        <figure class="figure panel">
+          <figcaption class="figure-head">
+            <span class="figure-title">Held-out accuracy by architecture</span>
+            <span class="figure-sub">Kaggle test split · 1,600 scans · higher is better</span>
+          </figcaption>
+          <div class="chart-scroll">
+            <svg class="chart" viewBox="0 0 1000 216" role="img" width="100%"
+                 aria-label="Bar chart of held-out accuracy: Angel 91.94 percent, Yi 90.19 percent, Hamet 90.00 percent, Izzie 69.75 percent.">
+              <line class="grid-line" x1="445" y1="8" x2="445" y2="178"></line>
+              <line class="grid-line" x1="610" y1="8" x2="610" y2="178"></line>
+              <line class="grid-line" x1="775" y1="8" x2="775" y2="178"></line>
+              <line class="grid-line" x1="940" y1="8" x2="940" y2="178"></line>
+
+              <g>
+                <text class="cat-text" x="0" y="25">Angel</text>
+                <text class="cat-sub"  x="0" y="38">brain_mri_cnn_v5</text>
+                <path class="bar is-top bar-grow" d="M280,16 H882.8 A4,4 0 0 1 886.8,20 V30 A4,4 0 0 1 882.8,34 H280 Z"></path>
+                <text class="val-text is-top" x="898.8" y="29">91.94%</text>
+              </g>
+              <g>
+                <text class="cat-text" x="0" y="69">Yi</text>
+                <text class="cat-sub"  x="0" y="82">yi_cnn_ver3</text>
+                <path class="bar bar-grow" style="animation-delay:.06s" d="M280,60 H871.3 A4,4 0 0 1 875.3,64 V74 A4,4 0 0 1 871.3,78 H280 Z"></path>
+                <text class="val-text" x="887.3" y="73">90.19%</text>
+              </g>
+              <g>
+                <text class="cat-text" x="0" y="113">Hamet</text>
+                <text class="cat-sub"  x="0" y="126">CNNTest_v2.0</text>
+                <path class="bar bar-grow" style="animation-delay:.12s" d="M280,104 H870 A4,4 0 0 1 874,108 V118 A4,4 0 0 1 870,122 H280 Z"></path>
+                <text class="val-text" x="886" y="117">90.00%</text>
+              </g>
+              <g>
+                <text class="cat-text" x="0" y="157">Izzie</text>
+                <text class="cat-sub"  x="0" y="170">izzieleetesting</text>
+                <path class="bar bar-grow" style="animation-delay:.18s" d="M280,148 H736.4 A4,4 0 0 1 740.4,152 V162 A4,4 0 0 1 736.4,166 H280 Z"></path>
+                <text class="val-text" x="752.4" y="161">69.75%</text>
+              </g>
+
+              <line class="axis-line" x1="280" y1="178" x2="940" y2="178"></line>
+              <text class="tick-text" x="280" y="196" text-anchor="middle">0%</text>
+              <text class="tick-text" x="445" y="196" text-anchor="middle">25%</text>
+              <text class="tick-text" x="610" y="196" text-anchor="middle">50%</text>
+              <text class="tick-text" x="775" y="196" text-anchor="middle">75%</text>
+              <text class="tick-text" x="940" y="196" text-anchor="middle">100%</text>
+            </svg>
+          </div>
+          <p class="figure-note">
+            Sahil's prototype is deployed in the demo but its notebook outputs were not committed, so
+            it has no verifiable benchmark and is omitted here. Izzie's bar is the committed baseline
+            run; the checkpoint currently serving in the demo is a later retrain that has not been
+            re-benchmarked in the repository.
+          </p>
+        </figure>
+
+        <!-- Chart D -->
+        <figure class="figure panel">
+          <figcaption class="figure-head">
+            <span class="figure-title">Glioma is the hardest class — in every model</span>
+            <span class="figure-sub">F1 range across the three benchmarked CNNs · dot marks the mean</span>
+          </figcaption>
+          <div class="chart-scroll">
+            <svg class="chart" viewBox="0 0 1000 226" role="img" width="100%"
+                 aria-label="Range chart of F1 score by class: glioma averages 0.839, meningioma 0.883, no tumor 0.933, pituitary 0.967. Glioma is lowest in all three models.">
+              <line class="grid-line" x1="326" y1="14" x2="326" y2="196"></line>
+              <line class="grid-line" x1="482" y1="14" x2="482" y2="196"></line>
+              <line class="grid-line" x1="638" y1="14" x2="638" y2="196"></line>
+              <line class="grid-line" x1="794" y1="14" x2="794" y2="196"></line>
+              <line class="grid-line" x1="950" y1="14" x2="950" y2="196"></line>
+
+              <g class="fade-in">
+                <text class="cat-text" x="150" y="39" text-anchor="end">Glioma</text>
+                <rect x="388.4" y="32" width="113.6" height="4" rx="2" fill="rgba(148,188,227,.4)"></rect>
+                <circle cx="447.1" cy="34" r="5.5" fill="var(--ink-acc)" stroke="var(--ink-panel)" stroke-width="2"></circle>
+                <text class="val-text is-top" x="518" y="39">0.839</text>
+
+                <text class="cat-text" x="150" y="85" text-anchor="end">Meningioma</text>
+                <rect x="575.6" y="78" width="23.4" height="4" rx="2" fill="rgba(148,188,227,.4)"></rect>
+                <circle cx="583.4" cy="80" r="5.5" fill="rgba(148,188,227,.4)" stroke="var(--ink-panel)" stroke-width="2"></circle>
+                <text class="val-text" x="615" y="85">0.883</text>
+
+                <text class="cat-text" x="150" y="131" text-anchor="end">No tumor</text>
+                <rect x="669.2" y="124" width="148.5" height="4" rx="2" fill="rgba(148,188,227,.4)"></rect>
+                <circle cx="739.4" cy="126" r="5.5" fill="rgba(148,188,227,.4)" stroke="var(--ink-panel)" stroke-width="2"></circle>
+                <text class="val-text" x="833.7" y="131">0.933</text>
+
+                <text class="cat-text" x="150" y="177" text-anchor="end">Pituitary</text>
+                <rect x="825.2" y="170" width="32.4" height="4" rx="2" fill="rgba(148,188,227,.4)"></rect>
+                <circle cx="846.4" cy="172" r="5.5" fill="rgba(148,188,227,.4)" stroke="var(--ink-panel)" stroke-width="2"></circle>
+                <text class="val-text" x="873.6" y="177">0.967</text>
+              </g>
+
+              <line class="axis-line" x1="170" y1="196" x2="950" y2="196"></line>
+              <text class="tick-text" x="170" y="214" text-anchor="middle">0.75</text>
+              <text class="tick-text" x="326" y="214" text-anchor="middle">0.80</text>
+              <text class="tick-text" x="482" y="214" text-anchor="middle">0.85</text>
+              <text class="tick-text" x="638" y="214" text-anchor="middle">0.90</text>
+              <text class="tick-text" x="794" y="214" text-anchor="middle">0.95</text>
+              <text class="tick-text" x="950" y="214" text-anchor="middle">1.00</text>
+            </svg>
+          </div>
+          <p class="figure-note">
+            The bar spans the lowest and highest F1 the three models achieved for that class; the dot
+            is their mean. Glioma sits roughly 13 points below pituitary no matter whose architecture
+            is running — a property of the data, not of any one design choice.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <caption>
+                Per-class F1 — the numbers behind the chart. Sources:
+                <span class="mono">brain_mri_cnn_v5.ipynb</span>,
+                <span class="mono">Yi_CNN_Model_ver3.ipynb</span>,
+                <span class="mono">CNNTest_v2.0.ipynb</span> (Angel's report prints 4 decimals, the others 2).
+              </caption>
+              <thead>
+                <tr><th>Class</th><th class="num">Angel v5</th><th class="num">Yi ver3</th><th class="num">Hamet v2.0</th><th class="num">Mean</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Glioma</td><td class="num">0.856</td><td class="num">0.84</td><td class="num">0.82</td><td class="num">0.839</td></tr>
+                <tr><td>Meningioma</td><td class="num">0.888</td><td class="num">0.88</td><td class="num">0.88</td><td class="num">0.883</td></tr>
+                <tr><td>No tumor</td><td class="num">0.958</td><td class="num">0.91</td><td class="num">0.93</td><td class="num">0.933</td></tr>
+                <tr><td>Pituitary</td><td class="num">0.970</td><td class="num">0.96</td><td class="num">0.97</td><td class="num">0.967</td></tr>
+                <tr><td><strong>Overall accuracy</strong></td><td class="num"><strong>0.919</strong></td><td class="num"><strong>0.902</strong></td><td class="num"><strong>0.900</strong></td><td class="num muted">—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </figure>
+
+        <!-- Chart E -->
+        <figure class="figure panel">
+          <figcaption class="figure-head">
+            <span class="figure-title">Precision vs recall — the best model</span>
+            <span class="figure-sub">Angel · <span class="mono">brain_mri_cnn_v5</span> · 1,600 scans</span>
+          </figcaption>
+          <div class="chart-legend" style="margin-bottom:var(--s1)">
+            <span>
+              <svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" fill="none" stroke="var(--ink-acc)" stroke-width="2"></circle></svg>
+              Precision
+            </span>
+            <span>
+              <svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="var(--ink-acc)"></circle></svg>
+              Recall
+            </span>
+          </div>
+          <div class="chart-scroll">
+            <svg class="chart" viewBox="0 0 1000 226" role="img" width="100%"
+                 aria-label="Dumbbell chart contrasting precision and recall per class. Glioma has precision 0.935 but recall 0.790, by far the widest gap; the other three classes have recall above precision.">
+              <line class="grid-line" x1="326" y1="14" x2="326" y2="196"></line>
+              <line class="grid-line" x1="482" y1="14" x2="482" y2="196"></line>
+              <line class="grid-line" x1="638" y1="14" x2="638" y2="196"></line>
+              <line class="grid-line" x1="794" y1="14" x2="794" y2="196"></line>
+              <line class="grid-line" x1="950" y1="14" x2="950" y2="196"></line>
+
+              <g class="fade-in">
+                <!-- glioma: R .7900 -> 294.8 ; P .9349 -> 746.9 -->
+                <text class="cat-text" x="150" y="39" text-anchor="end">Glioma</text>
+                <line x1="294.8" y1="34" x2="746.9" y2="34" stroke="rgba(148,188,227,.4)" stroke-width="2"></line>
+                <text class="val-text is-top" x="278.8" y="39" text-anchor="end">0.790</text>
+                <circle cx="294.8" cy="34" r="5" fill="var(--ink-acc)" stroke="var(--ink-panel)" stroke-width="2"></circle>
+                <circle cx="746.9" cy="34" r="4.5" fill="var(--ink-panel)" stroke="var(--ink-acc)" stroke-width="2"></circle>
+                <text class="val-text" x="762.9" y="39">0.935</text>
+
+                <!-- meningioma: P .8595 -> 511.6 ; R .9175 -> 692.6 -->
+                <text class="cat-text" x="150" y="85" text-anchor="end">Meningioma</text>
+                <line x1="511.6" y1="80" x2="692.6" y2="80" stroke="rgba(148,188,227,.4)" stroke-width="2"></line>
+                <text class="val-text" x="495.6" y="85" text-anchor="end">0.860</text>
+                <circle cx="511.6" cy="80" r="4.5" fill="var(--ink-panel)" stroke="var(--ink-acc)" stroke-width="2"></circle>
+                <circle cx="692.6" cy="80" r="5" fill="var(--ink-acc)" stroke="var(--ink-panel)" stroke-width="2"></circle>
+                <text class="val-text" x="708.6" y="85">0.918</text>
+
+                <!-- notumor: P .9294 -> 729.7 ; R .9875 -> 911.0 -->
+                <text class="cat-text" x="150" y="131" text-anchor="end">No tumor</text>
+                <line x1="729.7" y1="126" x2="911.0" y2="126" stroke="rgba(148,188,227,.4)" stroke-width="2"></line>
+                <text class="val-text" x="713.7" y="131" text-anchor="end">0.929</text>
+                <circle cx="729.7" cy="126" r="4.5" fill="var(--ink-panel)" stroke="var(--ink-acc)" stroke-width="2"></circle>
+                <circle cx="911.0" cy="126" r="5" fill="var(--ink-acc)" stroke="var(--ink-panel)" stroke-width="2"></circle>
+                <text class="val-text" x="927.0" y="131">0.988</text>
+
+                <!-- pituitary: P .9585 -> 820.5 ; R .9825 -> 895.4 -->
+                <text class="cat-text" x="150" y="177" text-anchor="end">Pituitary</text>
+                <line x1="820.5" y1="172" x2="895.4" y2="172" stroke="rgba(148,188,227,.4)" stroke-width="2"></line>
+                <text class="val-text" x="804.5" y="177" text-anchor="end">0.959</text>
+                <circle cx="820.5" cy="172" r="4.5" fill="var(--ink-panel)" stroke="var(--ink-acc)" stroke-width="2"></circle>
+                <circle cx="895.4" cy="172" r="5" fill="var(--ink-acc)" stroke="var(--ink-panel)" stroke-width="2"></circle>
+                <text class="val-text" x="911.4" y="177">0.983</text>
+              </g>
+
+              <line class="axis-line" x1="170" y1="196" x2="950" y2="196"></line>
+              <text class="tick-text" x="170" y="214" text-anchor="middle">0.75</text>
+              <text class="tick-text" x="326" y="214" text-anchor="middle">0.80</text>
+              <text class="tick-text" x="482" y="214" text-anchor="middle">0.85</text>
+              <text class="tick-text" x="638" y="214" text-anchor="middle">0.90</text>
+              <text class="tick-text" x="794" y="214" text-anchor="middle">0.95</text>
+              <text class="tick-text" x="950" y="214" text-anchor="middle">1.00</text>
+            </svg>
+          </div>
+          <p class="figure-note">
+            Glioma is the one class where precision far exceeds recall. When the model says "glioma"
+            it is usually right — it just does not say it often enough.
+          </p>
+        </figure>
+
+        <div class="grid grid-split">
+          <div class="table-wrap panel">
+            <table>
+              <caption>Prediction volume, derived from the v5 report — precision, recall and support determine these counts exactly</caption>
+              <thead>
+                <tr><th>Class</th><th class="num">Actual</th><th class="num">Predicted</th><th class="num">Correct</th><th class="num">Missed</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Glioma</td><td class="num">400</td><td class="num">338</td><td class="num">316</td><td class="num">84</td></tr>
+                <tr><td>Meningioma</td><td class="num">400</td><td class="num">427</td><td class="num">367</td><td class="num">33</td></tr>
+                <tr><td>No tumor</td><td class="num">400</td><td class="num">425</td><td class="num">395</td><td class="num">5</td></tr>
+                <tr><td>Pituitary</td><td class="num">400</td><td class="num">410</td><td class="num">393</td><td class="num">7</td></tr>
+                <tr><td><strong>Total</strong></td><td class="num"><strong>1,600</strong></td><td class="num"><strong>1,600</strong></td><td class="num"><strong>1,471</strong></td><td class="num"><strong>129</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout">
+            <strong>The clinically important number is 84.</strong> The best model calls "glioma"
+            only 338 times when it should call it 400, and misses 84 real gliomas — 21% of them.
+            Those 84 scans are re-labelled mostly as meningioma, which is exactly why meningioma is
+            over-predicted at 427. A false "meningioma" on a glioma patient is not a rounding error;
+            it points to a different treatment pathway.
+          </div>
+        </div>
+
+        <!-- Generalization -->
+        <div class="panel">
+          <div class="figure-head" style="margin-bottom:var(--s4)">
+            <span class="figure-title">Generalization to data we never trained on</span>
+            <span class="figure-sub">Two independent public datasets · source: <span class="mono">unseen-dataset-evaluation/</span></span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Checkpoint</th>
+                  <th class="num">Kaggle held-out<br>n = 1,600</th>
+                  <th class="num">External set 1<br>n = 1,000</th>
+                  <th class="num">External set 2<br>n = 512</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Angel · <span class="mono">brain_mri_cnn.pth</span></td>
+                  <td class="num">91.94%</td><td class="num">93.90%</td><td class="num">99.22%</td>
+                </tr>
+                <tr>
+                  <td>Yi · <span class="mono">yi_cnn_ver3_result.pth</span></td>
+                  <td class="num">90.19%</td><td class="num">91.70%</td><td class="num">96.09%</td>
+                </tr>
+                <tr>
+                  <td>Hamet · <span class="mono">CNNTest_v1.0.keras</span></td>
+                  <td class="num">89.00%</td><td class="num">95.60%</td><td class="num">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="figure-note" style="margin-top:var(--s3)">
+            Headline accuracy holds up — and even improves — on unseen data, which is a genuinely good
+            result. But the aggregate hides a serious per-class failure, which the next section takes
+            apart.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 07 IMPACT & BIAS ---------- -->
+    <section class="section" id="impact">
+      <div class="section-head">
+        <p class="kicker">07 — Impact &amp; bias</p>
+        <h2 class="h2">Who this helps, who it could hurt</h2>
+      </div>
+
+      <div class="stack">
+        <div class="grid grid-2">
+          <div class="panel">
+            <p class="label" style="margin-bottom:var(--s3)">Positive societal impact</p>
+            <ul class="bullets">
+              <li><strong>Triage, not diagnosis.</strong> A model that flags likely-tumor scans for
+                priority review moves the worst cases up the queue without removing a radiologist from
+                the loop.</li>
+              <li><strong>Reach.</strong> Many hospitals have MRI hardware but no on-site
+                neuroradiologist. A second opinion that runs on CPU in a browser is meaningfully
+                different from one that requires a specialist referral.</li>
+              <li><strong>Calibration made visible.</strong> The demo returns all four class
+                probabilities rather than a single label, so a 51/49 split between glioma and
+                meningioma reads as the coin-flip it is.</li>
+              <li><strong>An open teaching baseline.</strong> Every notebook, weight reference and
+                metric is public, including the runs that went badly.</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <p class="label" style="margin-bottom:var(--s3)">Negative societal impact</p>
+            <ul class="bullets">
+              <li><strong>Automation bias.</strong> A confidently wrong answer is more dangerous than
+                no answer. Our best model misses <strong>21% of gliomas</strong> while reporting high
+                confidence — glioma precision is 0.935.</li>
+              <li><strong>No localization.</strong> Without segmentation there is no way for a
+                clinician to check <em>where</em> the model looked, so its reasoning cannot be audited
+                at the point of care.</li>
+              <li><strong>Unmeasurable subgroup risk.</strong> The dataset ships no age, sex or
+                ethnicity metadata. A model could be uniformly worse for an entire demographic and
+                every metric on this page would look unchanged.</li>
+              <li><strong>Deskilling and liability drift.</strong> Tools introduced as assistive tend
+                to become defaults under time pressure, with no clear owner when the default is
+                wrong.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="panel">
+            <p class="label" style="margin-bottom:var(--s3)">How ML <em>amplifies</em> bias here</p>
+            <ul class="bullets">
+              <li><strong>Shortcut learning is measurable in our own data.</strong> We audited the
+                image files: <strong>0 of 400</strong> No Tumor test scans are 512×512, while 81%, 71%
+                and 98% of glioma, meningioma and pituitary scans are. The No Tumor class is a
+                collection of small, heterogeneous web-sourced images — one carries a visible
+                <span class="mono">medscape.com</span> watermark. A CNN can separate "no tumor" on
+                resolution and compression artifacts instead of anatomy.</li>
+              <li><strong>And the consequence shows up in the metrics.</strong> Angel's deployed
+                checkpoint scores No Tumor recall of <strong>0.664</strong> on external set 1 and
+                <strong>1.000</strong> on external set 2 — a 34-point swing on one class, from one
+                model, driven purely by which institution supplied the scans.</li>
+              <li><strong>Evaluation contamination.</strong> Meningioma is the only class padded with
+                augmented copies — 103 of its 400 test images (25.8%) are
+                <span class="mono">Te-aug-me_*</span> files, versus zero in every other class. Its
+                in-distribution scores are likely optimistic.</li>
+              <li><strong>Aggregate metrics hide all of it.</strong> Every issue above is invisible in
+                the 91.94% headline. Reporting one number is itself a bias-amplifying choice.</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <p class="label" style="margin-bottom:var(--s3)">How ML <em>mitigates</em> bias here</p>
+            <ul class="bullets">
+              <li><strong>Enforced class balance.</strong> An exactly equal 1,400/400 split per class
+                means no diagnosis is favored by prevalence, and it makes a naive majority-guesser
+                score 25% instead of looking competent. The caveat from the left-hand column applies:
+                that balance was partly manufactured by augmenting meningioma, so it buys fairness
+                across classes at the cost of some independence within one.</li>
+              <li><strong>Augmentation as invariance training.</strong> Rotation, mirroring and
+                contrast jitter push the network toward structural anomalies and away from scan angle
+                and intensity — the artifacts most tied to a specific machine.</li>
+              <li><strong>Cost-sensitive loss.</strong> Two models weight cross-entropy so that a
+                missed tumor is penalized more heavily than a false alarm, encoding the asymmetry that
+                actually matters clinically.</li>
+              <li><strong>External validation as standard practice.</strong> Running every checkpoint
+                against two datasets from other institutions is what surfaced the No Tumor collapse.
+                A single-dataset project would have shipped believing it had a 99% model.</li>
+              <li><strong>Auditability.</strong> Bias found is bias fixable. The provenance split
+                above was discovered by inspecting file metadata — an audit anyone can repeat from the
+                public repository.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>The honest summary.</strong> Our models are good at the benchmark and not yet
+          trustworthy in a clinic. The gap between those two statements is the actual finding of this
+          project, and closing it is a data-provenance problem at least as much as a modeling one.
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 08 NEXT STEPS ---------- -->
+    <section class="section" id="next">
+      <div class="section-head">
+        <p class="kicker">08 — Next steps</p>
+        <h2 class="h2">Where the work goes from here</h2>
+        <p class="lede">
+          <!-- TODO(team): replace this paragraph with your framing for the next phase. -->
+          Add a short paragraph here describing the group's plan for the next phase of work.
+        </p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="panel todo-card">
+          <p class="label">Group work — priority 1</p>
+          <h3 class="h4">Title of the first workstream</h3>
+          <p class="small">
+            <!-- TODO(team): what, why it matters, and who owns it. -->
+            Describe the task, why it is the highest-value next move, and who is leading it.
+          </p>
+        </div>
+        <div class="panel todo-card">
+          <p class="label">Group work — priority 2</p>
+          <h3 class="h4">Title of the second workstream</h3>
+          <p class="small">
+            <!-- TODO(team): what, why it matters, and who owns it. -->
+            Describe the task, why it is the highest-value next move, and who is leading it.
+          </p>
+        </div>
+        <div class="panel todo-card">
+          <p class="label">Individual steps</p>
+          <h3 class="h4">Per-member goals</h3>
+          <p class="small">
+            <!-- TODO(team): one line per member. -->
+            One line per team member describing what they will take on individually.
+          </p>
+        </div>
+        <div class="panel todo-card">
+          <p class="label">Timeline</p>
+          <h3 class="h4">Milestones and dates</h3>
+          <p class="small">
+            <!-- TODO(team): dated milestones. -->
+            List the dated milestones for the remainder of the project.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 09 CITATIONS ---------- -->
+    <section class="section" id="citations">
+      <div class="section-head">
+        <p class="kicker">09 — Citations &amp; resources</p>
+        <h2 class="h2">Sources and documentation</h2>
+      </div>
+
+      <div class="grid grid-split">
+        <div>
+          <p class="label" style="margin-bottom:var(--s2)">Literature</p>
+          <ol class="cites">
+            <li>
+              Disci, R., Gurcan, F., &amp; Soylu, A. (2025). Advanced brain tumor classification in MR
+              images using transfer learning and pre-trained deep CNN models. <em>Cancers, 17</em>(1), 121.
+              <a href="https://doi.org/10.3390/cancers17010121">doi.org/10.3390/cancers17010121</a>
+              <br><span class="caption">Benchmarks pretrained backbones on this same four-class task —
+              the direct counterpoint to our train-from-scratch approach.</span>
+            </li>
+            <li>
+              Abbad Andaloussi, M., Maser, R., Hertel, F., Lamoline, F., &amp; Husch, A. D. (2025).
+              Exploring adult glioma through MRI: A review of publicly available datasets to guide
+              efficient image analysis. <em>Neuro-Oncology Advances, 7</em>(1), vdae197.
+              <a href="https://doi.org/10.1093/noajnl/vdae197">doi.org/10.1093/noajnl/vdae197</a>
+              <br><span class="caption">A survey of public glioma MRI datasets and their provenance
+              limits — the basis for our dataset-bias analysis.</span>
+            </li>
+            <li>
+              Abdusalomov, A. B., Mukhiddinov, M., &amp; Whangbo, T. K. (2023). Brain tumor detection
+              based on deep learning approaches and magnetic resonance imaging. <em>Cancers, 15</em>(16), 4172.
+              <a href="https://doi.org/10.3390/cancers15164172">doi.org/10.3390/cancers15164172</a>
+              <br><span class="caption">Survey of deep-learning detection pipelines for brain MRI,
+              covering the preprocessing choices we adopted.</span>
+            </li>
+          </ol>
+          <p class="caption" style="margin-top:var(--s3)">
+            All three DOIs were resolved against Crossref metadata before publication.
+          </p>
+        </div>
+
+        <div class="stack">
+          <div>
+            <p class="label" style="margin-bottom:var(--s2)">Data sources</p>
+            <ol class="cites">
+              <li>
+                <strong>Primary.</strong> Nickparvar, M. <em>Brain Tumor MRI Dataset</em>. Kaggle
+                (CC BY 4.0). Our working copy holds 7,200 images — 6,997 original scans plus 203
+                augmented meningioma copies that pad that class to an exact 1,400 / 400 split.
+                <a href="https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset/data">kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset</a>
+              </li>
+              <li>
+                <strong>External validation 1.</strong> <em>Brain Tumor MRI Dataset for Deep Learning</em>. Kaggle.
+                <a href="https://www.kaggle.com/datasets/alamshihab075/brain-tumor-mri-dataset-for-deep-learning">kaggle.com/datasets/alamshihab075/brain-tumor-mri-dataset-for-deep-learning</a>
+              </li>
+              <li>
+                <strong>External validation 2.</strong> <em>BRISC 2025</em>. Kaggle.
+                <a href="https://www.kaggle.com/datasets/briscdataset/brisc2025">kaggle.com/datasets/briscdataset/brisc2025</a>
+              </li>
+            </ol>
+          </div>
+
+          <div class="panel">
+            <p class="label" style="margin-bottom:var(--s3)">Code &amp; documentation</p>
+            <ul class="bullets">
+              <li><a href="https://github.com/SahilMulki/brain-tumor-detection">GitHub repository</a> — all notebooks, the app, and this site</li>
+              <li><a href="https://brain-mri-tumor-classifier-ai4all.streamlit.app/">Live Streamlit demo</a> — upload a scan and run any of the five models</li>
+              <li><a href="https://github.com/SahilMulki/brain-tumor-detection/tree/main/cnn-models">cnn-models/</a> — training notebooks with committed metric outputs</li>
+              <li><a href="https://github.com/SahilMulki/brain-tumor-detection/tree/main/unseen-dataset-evaluation">unseen-dataset-evaluation/</a> — external validation runs</li>
+              <li><a href="https://github.com/SahilMulki/brain-tumor-detection/tree/main/data-visualization">data-visualization/</a> — dataset exploration notebooks</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <span>Angel Velasquez · Sahil Mulki · Yi Zou · Hamet Coulibaly · Michael Abraham · Izzie Lee · Ying Lin Zhao</span>
+        <span>MIT licensed · Academic demonstration — not for medical diagnosis</span>
+      </footer>
+    </section>
+
+  </main>
+</div>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
